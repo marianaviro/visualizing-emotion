@@ -1,0 +1,17 @@
+# Ignore the specific folder
+static/CS229
+
+# Ignore compiled files
+*.exe
+*.o
+*.out
+
+# Ignore log files
+*.log
+
+# Ignore node_modules directory (for Node.js projects)
+node_modules/
+
+# Ignore IDE/Editor specific files
+.vscode/
+.idea/
