@@ -6,8 +6,6 @@
   export let dataset;
   export let xFeature;
   export let yFeature;
-  export let colorFeature;
-  export let color;
   export let selectedImage;
 
   const margin = { top: 35, right: 20, bottom: 50, left: 60 };

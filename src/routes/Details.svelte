@@ -1,7 +1,6 @@
 <script>
   import * as d3 from "d3";
   import ConfidenceMeter from "./ConfidenceMeter.svelte";
-  export let dataset;
   export let selectedImage;
 
   $: confidenceScale = d3.scaleLinear().domain([0, 1]).range([555, 0]);
