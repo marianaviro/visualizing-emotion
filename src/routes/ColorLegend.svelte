@@ -1,5 +1,6 @@
 <script>
   export let color;
+  export let emotions;
 </script>
 
 <div class="swatches">
@@ -27,5 +28,6 @@
   .square {
     width: 15px;
     height: 15px;
+    border-radius: 3px;
   }
 </style>

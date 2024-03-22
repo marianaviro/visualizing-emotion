@@ -33,7 +33,7 @@
     .range([height - margin.bottom, margin.top]);
 </script>
 
-<div class="scatterplot" bind:borderBoxSize>
+<div class="scatter-container" bind:borderBoxSize>
   <svg {width} {height}>
     <g>
       {#each dataset as d}
@@ -41,7 +41,7 @@
           cx={x(d[xFeature])}
           cy={y(d[yFeature])}
           fill={d.color}
-          r={3}
+          r={4}
           role="button"
           aria-label="Point at ____"
           tabindex={d}
@@ -65,11 +65,8 @@
 </div>
 
 <style>
-  .scatterplot {
+  .scatter-container {
     height: 100%;
-    /* Take up any available extra space */
-    flex: 1;
-    border: 1px solid #ccc;
   }
   circle {
     cursor: pointer;

@@ -6,40 +6,73 @@
   export let confidenceScale;
 
   let borderBoxSize;
-  let height = 50;
+  let width = 50;
+  let scaleValues = [0, 0.25, 0.5, 0.75, 100];
 
-  $: width = borderBoxSize
+  $: height = borderBoxSize
     ? Math.min(borderBoxSize[0].blockSize, borderBoxSize[0].inlineSize)
-    : 410;
+    : 555;
 </script>
 
 <div class="meter-container">
   {#key confidence}
     <svg {width} {height}>
       <defs>
-        <linearGradient id="gradient">
+        <linearGradient id="gradient" x1="0%" y2="0%" x2="0%" y1="100%">
           <stop offset="5%" stop-color="white" />
           <stop offset="95%" stop-color={color} />
         </linearGradient>
       </defs>
       <g>
-        <rect {height} {width} fill="url(#gradient)" />
+        <rect
+          {height}
+          {width}
+          stroke="black"
+          stroke-linejoin="round"
+          fill="url(#gradient)"
+          id="gradient"
+        />
       </g>
-      <g transform="translate({confidenceScale(confidence)}, 0)">
-        <g transform="translate({confidence})">
-          <line y2={6} stroke="black" />
+      {#each scaleValues as scaleValue}
+        <g transform="translate(0, {confidenceScale(scaleValue)})">
+          <line
+            x2={70}
+            stroke="black"
+            stroke-width="0.5px"
+            stroke-dasharray="2,5"
+            stroke-linecap="round"
+            id="indicator"
+          />
           <text
-            text-anchor="middle"
+            class="scale"
+            text-anchor="start"
             dominant-baseline="hanging"
             fill="black"
-            y={10}>{confidence}</text
-          >
+            y={8}
+            x={5}
+            >{scaleValue * 100}%
+          </text>
+        </g>
+      {/each}
+      <g transform="translate(0, {confidenceScale(confidence)})">
+        <g transform="translateY({confidence})">
+          <line x2={70} stroke="black" stroke-width="8px" id="indicator" />
         </g>
       </g>
     </svg>
   {/key}
-  <p>{confidence}</p>
 </div>
 
 <style>
+  .meter-container {
+    min-height: 100%;
+    display: flex;
+    align-items: end;
+  }
+  .scale {
+    font-size: 0.8em;
+  }
+  #gradient {
+    min-height: 100%;
+  }
 </style>

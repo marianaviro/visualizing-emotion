@@ -22,21 +22,38 @@
   }
 
   $: categories = Array.from(new Set(data.dataset.map((d) => d.color)));
+  $: emotions = Array.from(new Set(data.dataset.map((d) => d.emotion)));
 
   $: color = d3.scaleOrdinal().domain(categories).range(d3.schemeTableau10);
 </script>
 
 <div class="container">
-  <div class="header">
-    <FeatureControls
-      dataset={data.dataset}
-      bind:xFeature
-      bind:yFeature
-      bind:colorFeature
-    />
-    <ColorLegend {color} />
-  </div>
   <div class="main">
+    <div class="controls">
+      <FeatureControls
+        dataset={data.dataset}
+        bind:xFeature
+        bind:yFeature
+        bind:colorFeature
+      />
+    </div>
+    <div class="scatterplot">
+      <Scatterplot
+        {onhover}
+        dataset={data.dataset}
+        {xFeature}
+        {yFeature}
+        {colorFeature}
+        {emotionFeature}
+        {color}
+        {selectedImage}
+      />
+    </div>
+    <div class="color">
+      <ColorLegend {emotions} {color} />
+    </div>
+  </div>
+  <div class="details">
     <Details
       dataset={data.dataset}
       {xFeature}
@@ -45,44 +62,44 @@
       {emotionFeature}
       {selectedImage}
     />
-    <Scatterplot
-      {onhover}
-      dataset={data.dataset}
-      {xFeature}
-      {yFeature}
-      {colorFeature}
-      {emotionFeature}
-      {color}
-      {selectedImage}
-    />
   </div>
 </div>
 
 <style>
   .container {
-    /* set the font */
-    font-family: system-ui, sans-serif;
-    font-size: 16px;
     padding: 2em;
     height: 100vh;
     width: 100vw;
     display: flex;
-    flex-direction: column;
-    gap: 2em;
+    flex-direction: row;
+    gap: 4em;
   }
 
   .main {
-    /* Use rest of vertical space not used by header */
-    flex: 1;
-    /* Allowing main to shrink */
-    min-height: 0;
+    /* max-width: 50%; */
+    height: 100%;
     display: flex;
+    flex-direction: column;
     gap: 2em;
     flex-wrap: wrap;
+    flex: 1;
   }
-  .header {
+
+  .details {
+    flex: 0.9;
+    height: 100%;
+  }
+
+  .controls {
     display: flex;
     align-items: center;
     gap: 2em;
+  }
+
+  .scatterplot {
+    /* height: 100%; */
+    flex: 1;
+    border: 1px solid #ccc;
+    border-radius: 5px;
   }
 </style>
