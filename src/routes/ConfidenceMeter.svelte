@@ -75,4 +75,9 @@
   #gradient {
     min-height: 100%;
   }
+  #indicator {
+    transition:
+      y1 250ms,
+      y2 250ms;
+  }
 </style>

@@ -18,11 +18,15 @@
   let selectedImage = data.dataset[0];
   function onhover(image) {
     selectedImage = image;
-    console.log(image);
   }
 
   $: categories = Array.from(new Set(data.dataset.map((d) => d.color)));
-  $: emotions = Array.from(new Set(data.dataset.map((d) => d.emotion)));
+  $: emotions = Array.from(
+    data.dataset.map((d) => ({
+      emotion: d.emotion,
+      color: d.color,
+    }))
+  );
 
   $: color = d3.scaleOrdinal().domain(categories).range(d3.schemeTableau10);
 </script>
@@ -54,14 +58,7 @@
     </div>
   </div>
   <div class="details">
-    <Details
-      dataset={data.dataset}
-      {xFeature}
-      {yFeature}
-      {colorFeature}
-      {emotionFeature}
-      {selectedImage}
-    />
+    <Details dataset={data.dataset} {selectedImage} />
   </div>
 </div>
 
@@ -76,12 +73,11 @@
   }
 
   .main {
-    /* max-width: 50%; */
+    max-width: 50%;
     height: 100%;
     display: flex;
     flex-direction: column;
     gap: 2em;
-    flex-wrap: wrap;
     flex: 1;
   }
 
@@ -97,7 +93,6 @@
   }
 
   .scatterplot {
-    /* height: 100%; */
     flex: 1;
     border: 1px solid #ccc;
     border-radius: 5px;

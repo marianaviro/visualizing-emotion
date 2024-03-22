@@ -2,7 +2,7 @@ import * as d3 from "d3";
 
 export async function load({ fetch }) {
   // load the csv file as a string
-  const res = await fetch("/emotions_conf.csv");
+  const res = await fetch("/dataset_version2.csv");
   const text = await res.text();
   // parse the string into an array of objects.
   // d3.autoType will automatically detect the types of the columns

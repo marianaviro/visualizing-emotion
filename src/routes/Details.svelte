@@ -4,10 +4,7 @@
   export let dataset;
   export let selectedImage;
 
-  $: confidenceScale = d3
-    .scaleLinear()
-    .domain(d3.extent(dataset, (d) => d.confidence))
-    .range([555, 0]);
+  $: confidenceScale = d3.scaleLinear().domain([0, 1]).range([555, 0]);
 </script>
 
 <div class="details-container">
