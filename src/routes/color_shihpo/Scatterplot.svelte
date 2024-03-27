@@ -31,6 +31,7 @@
 		.scaleLinear()
 		.domain(d3.extent(dataset, (d) => d[gFeature]))
 		.range([height - margin.bottom, margin.top]);
+
 </script>
 
 <div class="scatterplot" bind:borderBoxSize>
@@ -47,6 +48,7 @@
 					tabindex={d}
 					on:mouseover={() => onhover(d)}
 					on:focus={() => onhover(d)}
+					
 				/>
 			{/each}
 

@@ -15,11 +15,46 @@
 	let bFeature = 'lc_tsne3_f3';
 	let colorFeature = 'color';
 	let emotionFeature = 'emotion';
+	let id = 1;
 
 	let selectedImage = data.dataset[0];
+	let clickedImage1 = data.dataset[0];
+	let clickedImage2 = data.dataset[0];
 	function onhover(image) {
 		selectedImage = image;
-		console.log(image);
+		// console.log(image);
+	}
+
+	function onclick(image){
+		if (id == 1){
+			id = 2;
+			clickedImage1 = image;
+		}
+		else {
+			id = 1;
+			clickedImage2 = image;
+		}
+		console.log(id);
+	}
+
+	function loadImage(src, onload) {
+		// http://www.thefutureoftheweb.com/blog/image-onload-isnt-being-called
+		var img = new Image();
+		
+		img.onload = onload;
+		img.src = src;
+		img.width = '100px';
+
+		return img;
+	}
+	function merge(){
+		var canvas = document.getElementById("myCanvas");
+		var ctx = canvas.getContext("2d");
+		var img1 = loadImage(clickedImage1.file_path);
+		var img2 = loadImage(clickedImage2.file_path);
+		ctx.drawImage(img1, 0, 0, 100, 100);
+        ctx.globalAlpha = 0.5;
+        ctx.drawImage(img2, 0, 0, 100, 100);
 	}
 
 	$: categories = d3
@@ -37,6 +72,12 @@
 	<div class="header">
 		<FeatureControls dataset={data.dataset} bind:rFeature bind:gFeature bind:bFeature bind:colorFeature />
 		<ColorLegend {color} />
+		<button on:click={() => onclick(selectedImage)}>
+			Select
+		</button>
+		<button on:click={() => merge()}>
+			Merge
+		</button>
 	</div>
 	<div class="main">
 		<Details
@@ -46,6 +87,8 @@
 			{colorFeature}
 			{emotionFeature}
 			{selectedImage}
+			{clickedImage1}
+			{clickedImage2}
 		/>
 		<Scatterplot
 			{onhover}
