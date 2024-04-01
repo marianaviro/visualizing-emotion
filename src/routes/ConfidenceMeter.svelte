@@ -78,6 +78,8 @@
   #indicator {
     transition:
       y1 250ms,
-      y2 250ms;
+      y2 250ms,
+      x1 250ms,
+      x2 250ms;
   }
 </style>

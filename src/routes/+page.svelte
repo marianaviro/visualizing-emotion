@@ -1,6 +1,8 @@
 <script>
   import * as d3 from "d3";
+  import Voronoi from "./Voronoi.svelte";
   import Scatterplot from "./Scatterplot.svelte";
+  import ScatterplotHover from "./ScatterplotHover.svelte";
   import "./style.css";
   import Details from "./Details.svelte";
   import ColorLegend from "./ColorLegend.svelte";
@@ -42,7 +44,7 @@
       />
     </div>
     <div class="scatterplot">
-      <Scatterplot
+      <Voronoi
         {onhover}
         dataset={data.dataset}
         {xFeature}
@@ -54,7 +56,7 @@
       />
     </div>
     <div class="color">
-      <ColorLegend {emotions} {color} />
+      <ColorLegend {emotions} {color} {selectedImage} />
     </div>
   </div>
   <div class="details">

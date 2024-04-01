@@ -86,6 +86,8 @@
 
   img {
     max-height: 90%;
+    /* Not working */
+    transition: all 500ms;
   }
 
   .value {

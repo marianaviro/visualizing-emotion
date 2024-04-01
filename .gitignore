@@ -15,3 +15,5 @@ node_modules/
 # Ignore IDE/Editor specific files
 .vscode/
 .idea/
+
+.DS_Store
