@@ -16,7 +16,6 @@
 	{#if selectedImage}
 		<img src={selectedImage.file_path} width='250px' alt="" />
 		<h3>{selectedImage.emotion}</h3>
-		<h3>{selectedImage.color}</h3>
 	{/if}
 </div>
 

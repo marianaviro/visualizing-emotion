@@ -57,6 +57,10 @@
 	<h3>{clickedImage1.emotion}</h3>
 </div>
 
+<div>
+	<canvas class="add" id="add_plot_fig" width='100px' height='310px'></canvas>
+</div>
+
 <div id='plot2' class="scatterplot" bind:borderBoxSize>
 	<svg {width} {height}>
 		<g>
@@ -77,6 +81,10 @@
 	<h3>{clickedImage2.emotion}</h3>
 </div>
 
+<div>
+	<canvas class="add" id="eq_plot_fig" width='100px' height='310px'></canvas>
+</div>
+
 <div class="scatterplot" bind:borderBoxSize>
 	<svg {width} {height}>
 		<g>
@@ -89,9 +97,6 @@
 					role="button"
 					aria-label="Point at ____"
 					tabindex={d}
-					on:mouseover={() => onhover(d)}
-					on:focus={() => onhover(d)}
-					
 				/>
 			{/each}
 
@@ -124,5 +129,11 @@
 		transition:
 			cx 250ms,
 			cy 250ms;
+	}
+	.add {
+		/* display: block; */
+		flex: 1;
+		margin-left: auto;
+		margin-right: auto;
 	}
 </style>

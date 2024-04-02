@@ -24,6 +24,30 @@
 	let clickedImage2 = data.dataset[0];
 	let merge_r = 0.0;
 	let merge_g = 0.0;
+
+	function draw_add(obj_id) {
+		const c = document.getElementById(obj_id);
+		const ctx = c.getContext("2d");
+		ctx.moveTo(0, 150);
+		ctx.lineTo(100, 150);
+		ctx.moveTo(50, 90);
+		ctx.lineTo(50, 210);
+		ctx.lineWidth = 10;
+		ctx.stroke();
+	}
+
+	function draw_eq(obj_id) {
+		const c = document.getElementById(obj_id);
+		const ctx = c.getContext("2d");
+		ctx.moveTo(0, 135);
+		ctx.lineTo(100, 135);
+		ctx.moveTo(0, 165);
+		ctx.lineTo(100, 165);
+		ctx.lineWidth = 10;
+		ctx.stroke();
+	}
+
+
 	function onhover(image) {
 		selectedImage = image;
 		// console.log(image);
@@ -38,6 +62,8 @@
 			// img.setAttribute("border", "6px");
 			document.getElementById("img1").style.border="3px solid red";
 			document.getElementById("plot1").style.border="3px solid red";
+			draw_add("add_img_fig");
+			draw_add("add_plot_fig");
 		}
 		else {
 			id = 1;
@@ -46,6 +72,8 @@
 			// img.setAttribute("border", "6px");
 			document.getElementById("img2").style.border="3px solid red";
 			document.getElementById("plot2").style.border="3px solid red";
+			draw_eq("eq_img_fig");
+			draw_eq("eq_plot_fig");
 		}
 		console.log(id);
 	}
@@ -89,6 +117,7 @@
 		.reverse();
 
 	$: color = d3.scaleOrdinal().domain(categories).range(d3.schemeTableau10);
+
 </script>
 
 <div class="container">
