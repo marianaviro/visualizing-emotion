@@ -3,6 +3,8 @@
 	import Scatterplot from './Scatterplot.svelte';
 	import './style.css';
 	import Details from './Details.svelte';
+	import Details_selected from './Details_selected.svelte';
+	import Scatterplot_Selected from './Scatterplot_selected.svelte';
 	import ColorLegend from './ColorLegend.svelte';
 	import FeatureControls from './FeatureControls.svelte';
 
@@ -20,6 +22,8 @@
 	let selectedImage = data.dataset[0];
 	let clickedImage1 = data.dataset[0];
 	let clickedImage2 = data.dataset[0];
+	let merge_r = 0.0;
+	let merge_g = 0.0;
 	function onhover(image) {
 		selectedImage = image;
 		// console.log(image);
@@ -29,10 +33,19 @@
 		if (id == 1){
 			id = 2;
 			clickedImage1 = image;
+			// console.log(clickedImage1.file_path);
+			// let img = document.getElementById("img1");
+			// img.setAttribute("border", "6px");
+			document.getElementById("img1").style.border="3px solid red";
+			document.getElementById("plot1").style.border="3px solid red";
 		}
 		else {
 			id = 1;
 			clickedImage2 = image;
+			// let img = document.getElementById("img2");
+			// img.setAttribute("border", "6px");
+			document.getElementById("img2").style.border="3px solid red";
+			document.getElementById("plot2").style.border="3px solid red";
 		}
 		console.log(id);
 	}
@@ -43,7 +56,7 @@
 		
 		img.onload = onload;
 		img.src = src;
-		img.width = '100px';
+		img.width = '250px';
 
 		return img;
 	}
@@ -52,9 +65,19 @@
 		var ctx = canvas.getContext("2d");
 		var img1 = loadImage(clickedImage1.file_path);
 		var img2 = loadImage(clickedImage2.file_path);
-		ctx.drawImage(img1, 0, 0, 100, 100);
+		ctx.drawImage(img1, 0, 0, 250, 310);
         ctx.globalAlpha = 0.5;
-        ctx.drawImage(img2, 0, 0, 100, 100);
+        ctx.drawImage(img2, 0, 0, 250, 310);
+		// let img = document.getElementById("img1");
+		// img.setAttribute("border", "");
+		// img = document.getElementById("img2");
+		// img.setAttribute("border", "");
+		document.getElementById("img1").style.border="";
+		document.getElementById("img2").style.border="";
+		document.getElementById("plot1").style.border="";
+		document.getElementById("plot2").style.border="";
+		merge_r = (clickedImage1[rFeature] + clickedImage2[rFeature]) / 2;
+		merge_g = (clickedImage1[gFeature] + clickedImage2[gFeature]) / 2;
 	}
 
 	$: categories = d3
@@ -80,16 +103,6 @@
 		</button>
 	</div>
 	<div class="main">
-		<Details
-			dataset={data.dataset}
-			{rFeature}
-			{gFeature}
-			{colorFeature}
-			{emotionFeature}
-			{selectedImage}
-			{clickedImage1}
-			{clickedImage2}
-		/>
 		<Scatterplot
 			{onhover}
 			dataset={data.dataset}
@@ -100,7 +113,45 @@
 			{color}
 			{selectedImage}
 		/>
+		<Details_selected
+			dataset={data.dataset}
+			{rFeature}
+			{gFeature}
+			{colorFeature}
+			{emotionFeature}
+			{selectedImage}
+			{clickedImage1}
+			{clickedImage2}
+		/>
 	</div>
+	
+	<div class="main">
+		<Details
+			dataset={data.dataset}
+			{rFeature}
+			{gFeature}
+			{colorFeature}
+			{emotionFeature}
+			{selectedImage}
+			{clickedImage1}
+			{clickedImage2}
+		/>
+		
+		<Scatterplot_Selected
+			{onhover}
+			dataset={data.dataset}
+			{rFeature}
+			{gFeature}
+			{colorFeature}
+			{emotionFeature}
+			{color}
+			{clickedImage1}
+			{clickedImage2}
+			{merge_r}
+			{merge_g}
+		/>
+	</div>
+	
 </div>
 
 <style>
@@ -130,4 +181,5 @@
 		align-items: center;
 		gap: 2em;
 	}
+	
 </style>

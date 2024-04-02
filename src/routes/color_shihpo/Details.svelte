@@ -11,38 +11,19 @@
 	}
 </script>
 
-<div class="details">
-	{#if clickedImage1}
-		<img src={clickedImage1.file_path} width='50%' alt="" />
-		<h3>{clickedImage1.emotion}</h3>
-		<h3>{clickedImage1.color}</h3>
-	{/if}
-</div>
-<div class="details">
-	{#if clickedImage2}
-		<img src={clickedImage2.file_path} width='50%' alt="" />
-		<h3>{clickedImage2.emotion}</h3>
-		<h3>{clickedImage2.color}</h3>
-	{/if}
-</div>
+
 <div class="details">
 	{#if selectedImage}
-		<img src={selectedImage.file_path} width='50%' alt="" />
+		<img src={selectedImage.file_path} width='250px' alt="" />
 		<h3>{selectedImage.emotion}</h3>
 		<h3>{selectedImage.color}</h3>
 	{/if}
 </div>
-<div class="details">
-	{#if selectedImage}
-		<canvas id="myCanvas" style="border:1px solid grey"></canvas>
-		<h3>{selectedImage.emotion}</h3>
-		<h3>{selectedImage.color}</h3>
-	{/if}
-</div>
+
 <style>
 	.details {
 		flex: 1;
 		float: left;
-		height: 100%;
+		/* height: 50%; */
 	}
 </style>
