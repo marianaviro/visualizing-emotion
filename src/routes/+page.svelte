@@ -1,7 +1,6 @@
 <script>
   import * as d3 from "d3";
   import Voronoi from "./Voronoi.svelte";
-  import Scatterplot from "./Scatterplot.svelte";
   import ScatterplotHover from "./ScatterplotHover.svelte";
   import "./style.css";
   import Details from "./Details.svelte";
@@ -31,6 +30,10 @@
   );
 
   $: color = d3.scaleOrdinal().domain(categories).range(d3.schemeTableau10);
+
+  function hello() {
+    console.log("Hello");
+  }
 </script>
 
 <div class="container">
@@ -44,7 +47,7 @@
       />
     </div>
     <div class="scatterplot">
-      <Voronoi
+      <ScatterplotHover
         {onhover}
         dataset={data.dataset}
         {xFeature}
@@ -53,6 +56,7 @@
         {emotionFeature}
         {color}
         {selectedImage}
+        onclick={hello}
       />
     </div>
     <div class="color">
@@ -84,7 +88,7 @@
   }
 
   .details {
-    flex: 0.9;
+    flex: 1.6;
     height: 100%;
   }
 
@@ -95,7 +99,7 @@
   }
 
   .scatterplot {
-    flex: 1;
+    flex: 0.3;
     border: 1px solid #ccc;
     border-radius: 5px;
   }

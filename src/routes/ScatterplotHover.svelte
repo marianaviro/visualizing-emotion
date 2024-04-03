@@ -7,6 +7,7 @@
   export let xFeature;
   export let yFeature;
   export let selectedImage;
+  export let onclick;
 
   import { onMount } from "svelte";
 
@@ -84,6 +85,8 @@
           tabindex={d}
           on:mouseover={() => onhover(d)}
           on:focus={() => onhover(d)}
+          on:click={() => onclick()}
+          on:keydown={() => onclick()}
         />
       {/each}
     {/if}
