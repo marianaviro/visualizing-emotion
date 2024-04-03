@@ -1,6 +1,6 @@
 # Ignore the specific folder
 static/CS229
-svelte-kit/
+.svelte-kit/
 
 # Ignore compiled files
 *.exe
