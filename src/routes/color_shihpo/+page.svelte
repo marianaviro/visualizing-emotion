@@ -7,14 +7,15 @@
 	import Scatterplot_Selected from './Scatterplot_selected.svelte';
 	import ColorLegend from './ColorLegend.svelte';
 	import FeatureControls from './FeatureControls.svelte';
+	import npyjs from "npyjs";
 
 	// data comes from the load function in +page.js
 	export let data;
 
 	// default features to visualize
-	let rFeature = 'lc_tsne2_f1';
-	let gFeature = 'lc_tsne2_f2';
-	let bFeature = 'lc_tsne3_f3';
+	let xFeature = 'lc_tsne2_f1';
+	let yFeature = 'lc_tsne2_f2';
+	// let bFeature = 'lc_tsne3_f3';
 	let colorFeature = 'color';
 	let emotionFeature = 'emotion';
 	let id = 1;
@@ -22,16 +23,16 @@
 	let selectedImage = data.dataset[0];
 	let clickedImage1 = data.dataset[0];
 	let clickedImage2 = data.dataset[0];
-	let merge_r = 0.0;
-	let merge_g = 0.0;
+	let merge_x = 100.0;
+	let merge_y = 100.0;
 
 	function draw_add(obj_id) {
 		const c = document.getElementById(obj_id);
 		const ctx = c.getContext("2d");
 		ctx.moveTo(0, 150);
-		ctx.lineTo(100, 150);
-		ctx.moveTo(50, 90);
-		ctx.lineTo(50, 210);
+		ctx.lineTo(40, 150);
+		ctx.moveTo(20, 120);
+		ctx.lineTo(20, 180);
 		ctx.lineWidth = 10;
 		ctx.stroke();
 	}
@@ -40,9 +41,9 @@
 		const c = document.getElementById(obj_id);
 		const ctx = c.getContext("2d");
 		ctx.moveTo(0, 135);
-		ctx.lineTo(100, 135);
+		ctx.lineTo(40, 135);
 		ctx.moveTo(0, 165);
-		ctx.lineTo(100, 165);
+		ctx.lineTo(40, 165);
 		ctx.lineWidth = 10;
 		ctx.stroke();
 	}
@@ -60,6 +61,7 @@
 			// console.log(clickedImage1.file_path);
 			// let img = document.getElementById("img1");
 			// img.setAttribute("border", "6px");
+			
 			document.getElementById("img1").style.border="3px solid red";
 			document.getElementById("plot1").style.border="3px solid red";
 			draw_add("add_img_fig");
@@ -70,6 +72,7 @@
 			clickedImage2 = image;
 			// let img = document.getElementById("img2");
 			// img.setAttribute("border", "6px");
+			
 			document.getElementById("img2").style.border="3px solid red";
 			document.getElementById("plot2").style.border="3px solid red";
 			draw_eq("eq_img_fig");
@@ -102,10 +105,10 @@
 		// img.setAttribute("border", "");
 		document.getElementById("img1").style.border="";
 		document.getElementById("img2").style.border="";
-		document.getElementById("plot1").style.border="";
-		document.getElementById("plot2").style.border="";
-		merge_r = (clickedImage1[rFeature] + clickedImage2[rFeature]) / 2;
-		merge_g = (clickedImage1[gFeature] + clickedImage2[gFeature]) / 2;
+		document.getElementById("plot1").style.border="3px solid black";
+		document.getElementById("plot2").style.border="3px solid black";
+		merge_x = (clickedImage1.x + clickedImage2.x) / 2;
+		merge_y = (clickedImage1.y + clickedImage2.y) / 2;
 	}
 
 	$: categories = d3
@@ -118,11 +121,18 @@
 
 	$: color = d3.scaleOrdinal().domain(categories).range(d3.schemeTableau10);
 
+	// let n = new npyjs();
+	// n.load("CS229/m20_dfs_a_la_feat.npy", (array, shape) => {
+	// 	console.log('test');
+	// 	console.log(array);
+	// 	console.log(array['data']);
+	// 	console.log(array['shape']);
+	// });
 </script>
 
 <div class="container">
 	<div class="header">
-		<FeatureControls dataset={data.dataset} bind:rFeature bind:gFeature bind:bFeature bind:colorFeature />
+		<FeatureControls dataset={data.dataset} bind:xFeature bind:yFeature bind:colorFeature />
 		<ColorLegend {color} />
 		<button on:click={() => onclick(selectedImage)}>
 			Select
@@ -134,50 +144,32 @@
 	<div class="main">
 		<Scatterplot
 			{onhover}
+			{onclick}
 			dataset={data.dataset}
-			{rFeature}
-			{gFeature}
-			{colorFeature}
-			{emotionFeature}
-			{color}
+			{xFeature}
+			{yFeature}
 			{selectedImage}
 		/>
 		<Details_selected
-			dataset={data.dataset}
-			{rFeature}
-			{gFeature}
-			{colorFeature}
-			{emotionFeature}
-			{selectedImage}
 			{clickedImage1}
 			{clickedImage2}
+			{selectedImage}
 		/>
 	</div>
 	
 	<div class="main">
-		<Details
-			dataset={data.dataset}
-			{rFeature}
-			{gFeature}
-			{colorFeature}
-			{emotionFeature}
+		<!-- <Details
 			{selectedImage}
-			{clickedImage1}
-			{clickedImage2}
 		/>
-		
+		 -->
 		<Scatterplot_Selected
-			{onhover}
 			dataset={data.dataset}
-			{rFeature}
-			{gFeature}
-			{colorFeature}
-			{emotionFeature}
-			{color}
+			{xFeature}
+			{yFeature}
 			{clickedImage1}
 			{clickedImage2}
-			{merge_r}
-			{merge_g}
+			{merge_x}
+			{merge_y}
 		/>
 	</div>
 	

@@ -1,14 +1,5 @@
 <script>
-	export let dataset;
 	export let selectedImage;
-	export let clickedImage1;
-	export let clickedImage2;
-	function draw() {
-		const c = document.getElementById("myCanvas");
-		const ctx = c.getContext("2d");
-		const img = document.getElementById("scream");
-		ctx.drawImage(img, 10, 10);
-	}
 </script>
 
 

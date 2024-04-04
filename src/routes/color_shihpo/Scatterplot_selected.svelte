@@ -2,138 +2,158 @@
 	import * as d3 from 'd3';
 	import Axis from './Axis.svelte';
 
-	export let onhover;
 	export let dataset;
-	export let rFeature;
-	export let gFeature;
-	export let colorFeature;
-	export let color;
+	export let xFeature;
+	export let yFeature;
 	export let clickedImage1;
 	export let clickedImage2;
-	export let merge_r;
-	export let merge_g;
+	export let merge_x;
+	export let merge_y;
 
-	const margin = { top: 35, right: 20, bottom: 50, left: 60 };
+	import { onMount } from "svelte";
+  
+  const margin = { top: 30, right: 30, bottom: 30, left: 30 };
 
-	let borderBoxSize;
+  let borderBoxSize;
 
-	$: width = borderBoxSize
-		? Math.min(borderBoxSize[0].blockSize, borderBoxSize[0].inlineSize)
-		: 400;
+  let voronoi;
 
-	$: height = borderBoxSize
-		? Math.min(borderBoxSize[0].blockSize, borderBoxSize[0].inlineSize)
-		: 400;
+  $: width = borderBoxSize ? borderBoxSize[0].inlineSize : 400;
 
-	$: x = d3
-		.scaleLinear()
-		.domain(d3.extent(dataset, (d) => d[rFeature]))
-		.range([margin.left, width - margin.right]);
+  $: height = borderBoxSize ? borderBoxSize[0].blockSize : 400;
 
-	$: y = d3
-		.scaleLinear()
-		.domain(d3.extent(dataset, (d) => d[gFeature]))
-		.range([height - margin.bottom, margin.top]);
+  $: x = d3
+	.scaleLinear()
+	.domain(d3.extent(dataset, (d) => d[xFeature]))
+	.range([margin.left, width - margin.right]);
 
+  $: y = d3
+	.scaleLinear()
+	.domain(d3.extent(dataset, (d) => d[yFeature]))
+	.range([height - margin.bottom, margin.top]);
+
+  $: renderedData = dataset.map((d) => {
+	return {
+	  x: x(d[xFeature]),
+	  y: y(d[yFeature]),
+	  color: d.color,
+	  file_path: d.file_path,
+	  emotion: d.emotion,
+	  confidence: d.confidence,
+	};
+  });
+
+  $: if (width && height) {
+	const delaunay = d3.Delaunay.from(
+	  renderedData,
+	  (d) => d.x,
+	  (d) => d.y
+	);
+	voronoi = delaunay.voronoi([0, 0, width, height]);
+	console.log(voronoi.renderCell());
+  }
 </script>
 
-<div id='plot1' class="scatterplot">
-	<svg {width} {height}>
-		<g>
-			{#if clickedImage1}
-				<circle
-					cx={x(clickedImage1[rFeature])}
-					cy={y(clickedImage1[gFeature])}
-					fill={clickedImage1.color}
-					r={6}
-					stroke={'black'}
-					strokeWidth={2}
-				/>
-			{/if}
-		</g>
-		<Axis scale={y} orientation={'left'} {width} {height} {margin} />
-		<Axis scale={x} orientation={'bottom'} {width} {height} {margin} />
-	</svg>
-	<h3>{clickedImage1.emotion}</h3>
+
+<div id='plot1' style="border: 3px solid black" class="scatter-container">
+  <svg {width} {height}>
+	{#if voronoi}
+	  <circle
+		cx={clickedImage1.x}
+		cy={clickedImage1.y}
+		fill={clickedImage1.color}
+		stroke={"black"}
+		r={4}
+		role="button"
+		aria-label="Point at ____"
+		tabindex={clickedImage1}
+	/>
+	{/if}
+  </svg>
 </div>
 
 <div>
-	<canvas class="add" id="add_plot_fig" width='100px' height='310px'></canvas>
+	<canvas class="add" id="add_plot_fig" width='40px' height='310px'></canvas>
 </div>
 
-<div id='plot2' class="scatterplot" bind:borderBoxSize>
+<div id='plot2' style="border: 3px solid black" class="scatter-container">
 	<svg {width} {height}>
-		<g>
-			{#if clickedImage2}
-				<circle
-					cx={x(clickedImage2[rFeature])}
-					cy={y(clickedImage2[gFeature])}
-					fill={clickedImage2.color}
-					r={6}
-					stroke={'black'}
-					strokeWidth={2}
-				/>
-			{/if}
-		</g>
-		<Axis scale={y} orientation={'left'} {width} {height} {margin} />
-		<Axis scale={x} orientation={'bottom'} {width} {height} {margin} />
+	  {#if voronoi}
+		<circle
+		  cx={clickedImage2.x}
+		  cy={clickedImage2.y}
+		  fill={clickedImage2.color}
+		  stroke={"black"}
+		  r={4}
+		  role="button"
+		  aria-label="Point at ____"
+		  tabindex={clickedImage2}
+	  />
+	  {/if}
 	</svg>
-	<h3>{clickedImage2.emotion}</h3>
 </div>
 
 <div>
-	<canvas class="add" id="eq_plot_fig" width='100px' height='310px'></canvas>
+	<canvas class="add" id="eq_plot_fig" width='40px' height='310px'></canvas>
 </div>
 
-<div class="scatterplot" bind:borderBoxSize>
+<div class="scatter-container" bind:borderBoxSize>
 	<svg {width} {height}>
-		<g>
-			{#each dataset as d}
-				<circle
-					cx={x(d[rFeature])}
-					cy={y(d[gFeature])}
-					fill={d.color}
-					r={3}
-					role="button"
-					aria-label="Point at ____"
-					tabindex={d}
-				/>
-			{/each}
-
-			{#if clickedImage2}
-				<circle
-					cx={x(merge_r)}
-					cy={y(merge_g)}
-					fill={'white'}
-					r={6}
-					stroke={'black'}
-					strokeWidth={3}
-					stroke-dasharray={"2,2"} 
-				/>
-			{/if}
-		</g>
-		<Axis scale={y} orientation={'left'} {width} {height} {margin} />
-		<Axis scale={x} orientation={'bottom'} {width} {height} {margin} />
+		{#if voronoi}
+		{#each renderedData as d, i}
+		  <path
+			class="cell"
+			d={voronoi.renderCell(i)}
+			fill="transparent"
+			stroke-width="0"
+			stroke="#eee"
+			role="button"
+			tabindex={d}
+			aria-label="Point at ____"
+		  />
+		  <circle
+			cx={d.x}
+			cy={d.y}
+			fill={d.color}
+			r={4}
+			role="button"
+			aria-label="Point at ____"
+			tabindex={d}
+			opacity={0.3}
+		  />
+		{/each}
+	  {/if}
+	  	<circle
+			cx={merge_x}
+			cy={merge_y}
+			fill={'black'}
+			r={4}
+		/>
+	  	<circle
+			cx={merge_x}
+			cy={merge_y}
+			r={8}
+			opacity={0.3}
+			stroke={'white'}
+			strokeWidth={3} 
+			role="button"
+			aria-label="Point at ____"
+			tabindex={0}
+		/>
 	</svg>
 </div>
-
 
 <style>
-	.scatterplot {
-		height: 100%;
-		/* Take up any available extra space */
-		flex: 1;
-	}
-	circle {
-		cursor: pointer;
-		transition:
-			cx 250ms,
-			cy 250ms;
-	}
-	.add {
-		/* display: block; */
-		flex: 1;
-		margin-left: auto;
-		margin-right: auto;
-	}
+  .scatter-container {
+	height: 100%;
+  }
+  circle {
+	cursor: pointer;
+	transition:
+		  cx 250ms,
+		  cy 250ms;
+  }
+  .cell {
+	cursor: pointer;
+  }
 </style>

@@ -1,8 +1,7 @@
 <script>
-	export let dataset;
-	export let selectedImage;
 	export let clickedImage1;
 	export let clickedImage2;
+	export let selectedImage;
 	
 	// draw();
 	
@@ -10,23 +9,23 @@
 
 <div id="img1" class="details_selected">
 	{#if clickedImage1}
-		<img src={clickedImage1.file_path} width='250px' alt="" />
+		<img src={clickedImage1.file_path} width='200px' alt="" />
+		<h3>{clickedImage1.emotion}</h3>
 	{/if}
 </div>
 <div>
-	<canvas class="add" id='add_img_fig' width='100px' height='310px'></canvas>
+	<canvas class="add" id='add_img_fig' width='50px' height='310px'></canvas>
 </div>
 
 <div id="img2" class="details_selected">
 	{#if clickedImage2}
-		<img src={clickedImage2.file_path} width='250px' alt="" />
-		<!-- <h3>{clickedImage2.emotion}</h3>
-		<h3>{clickedImage2.color}</h3> -->
+		<img src={clickedImage2.file_path} width='200px' alt="" />
+		<h3>{clickedImage2.emotion}</h3>
 	{/if}
 </div>
 
 <div>
-	<canvas class="add" id='eq_img_fig' width='100%' height='310px'></canvas>
+	<canvas class="add" id='eq_img_fig' width='50px' height='310px'></canvas>
 </div>
 
 <div  class="details_selected">
@@ -39,6 +38,7 @@
 		/* float: left; */
 		/* width: 20%; */
 		height: 320px;
+		text-align: center;
 	}
 	.add {
 		/* display: block; */
@@ -46,7 +46,10 @@
 		margin-left: auto;
 		margin-right: auto;
 	}
-	/* img {
-		border: #DFFF00 4px solid;
-	} */
+
+	img {
+		flex: 1;
+		margin-left: auto;
+		margin-right: auto;
+	}
 </style>

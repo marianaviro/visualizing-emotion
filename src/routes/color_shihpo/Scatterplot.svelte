@@ -1,83 +1,111 @@
 <script>
-	import * as d3 from 'd3';
-	import Axis from './Axis.svelte';
-
+	import * as d3 from "d3";
+	import Axis from "./Axis.svelte";
+  
 	export let onhover;
+	export let onclick;
 	export let dataset;
-	export let rFeature;
-	export let gFeature;
-	export let colorFeature;
-	export let color;
+	export let xFeature;
+	export let yFeature;
 	export let selectedImage;
-
-	const margin = { top: 35, right: 20, bottom: 50, left: 60 };
-
+  
+	import { onMount } from "svelte";
+  
+	const margin = { top: 30, right: 30, bottom: 30, left: 30 };
+  
 	let borderBoxSize;
-
-	$: width = borderBoxSize
-		? Math.min(borderBoxSize[0].blockSize, borderBoxSize[0].inlineSize)
-		: 400;
-
-	$: height = borderBoxSize
-		? Math.min(borderBoxSize[0].blockSize, borderBoxSize[0].inlineSize)
-		: 400;
-
+  
+	let voronoi;
+  
+	$: width = borderBoxSize ? borderBoxSize[0].inlineSize : 400;
+  
+	$: height = borderBoxSize ? borderBoxSize[0].blockSize : 400;
+  
 	$: x = d3
-		.scaleLinear()
-		.domain(d3.extent(dataset, (d) => d[rFeature]))
-		.range([margin.left, width - margin.right]);
-
+	  .scaleLinear()
+	  .domain(d3.extent(dataset, (d) => d[xFeature]))
+	  .range([margin.left, width - margin.right]);
+  
 	$: y = d3
-		.scaleLinear()
-		.domain(d3.extent(dataset, (d) => d[gFeature]))
-		.range([height - margin.bottom, margin.top]);
+	  .scaleLinear()
+	  .domain(d3.extent(dataset, (d) => d[yFeature]))
+	  .range([height - margin.bottom, margin.top]);
+  
+	$: renderedData = dataset.map((d) => {
+	  return {
+		x: x(d[xFeature]),
+		y: y(d[yFeature]),
+		color: d.color,
+		file_path: d.file_path,
+		emotion: d.emotion,
+		confidence: d.confidence,
+	  };
+	});
+  
+	$: if (width && height) {
+	  const delaunay = d3.Delaunay.from(
+		renderedData,
+		(d) => d.x,
+		(d) => d.y
+	  );
+	  voronoi = delaunay.voronoi([0, 0, width, height]);
+	  console.log(voronoi.renderCell());
+	}
+  </script>
+  
 
-</script>
-
-<div class="scatterplot" bind:borderBoxSize>
+  <div class="scatter-container" bind:borderBoxSize>
 	<svg {width} {height}>
-		<g>
-			{#each dataset as d}
-				<circle
-					cx={x(d[rFeature])}
-					cy={y(d[gFeature])}
-					fill={d.color}
-					r={3}
-					role="button"
-					aria-label="Point at ____"
-					tabindex={d}
-					on:mouseover={() => onhover(d)}
-					on:focus={() => onhover(d)}
-					
-				/>
-			{/each}
-
-			{#if selectedImage}
-				<circle
-					cx={x(selectedImage[rFeature])}
-					cy={y(selectedImage[gFeature])}
-					fill={selectedImage.color}
-					r={6}
-					stroke={'black'}
-					strokeWidth={2}
-				/>
-			{/if}
-		</g>
-		<Axis label={rFeature} scale={y} orientation={'left'} {width} {height} {margin} />
-		<Axis label={gFeature} scale={x} orientation={'bottom'} {width} {height} {margin} />
+	  {#if voronoi}
+		{#each renderedData as d, i}
+		  <path
+			class="cell"
+			d={voronoi.renderCell(i)}
+			fill="transparent"
+			stroke-width="0"
+			stroke="#eee"
+			role="button"
+			tabindex={d}
+			aria-label="Point at ____"
+			on:mouseover={() => onhover(d)}
+			on:focus={() => onhover(d)}
+		  />
+		  <circle
+			cx={d.x}
+			cy={d.y}
+			fill={d.color}
+			stroke={d.color == "black" ||
+			(selectedImage.x == d.x && selectedImage.y == d.y)
+			  ? selectedImage.x == d.x && selectedImage.y == d.y
+				? "black"
+				: "white"
+			  : "none"}
+			r={selectedImage.x == d.x && selectedImage.y == d.y ? 8 : 4}
+			role="button"
+			aria-label="Point at ____"
+			tabindex={d}
+			on:mouseover={() => onhover(d)}
+			on:focus={() => onhover(d)}
+			on:click={() => onclick(d)}
+			on:keydown={() => onclick(d)}
+		  />
+		{/each}
+	  {/if}
 	</svg>
-</div>
-
-<style>
-	.scatterplot {
-		height: 150%;
-		/* Take up any available extra space */
-		flex: 1;
+  </div>
+  
+  <style>
+	.scatter-container {
+	  height: 100%;
 	}
 	circle {
-		cursor: pointer;
-		transition:
+	  cursor: pointer;
+	  transition:
 			cx 250ms,
 			cy 250ms;
 	}
-</style>
+	.cell {
+	  cursor: pointer;
+	}
+  </style>
+  

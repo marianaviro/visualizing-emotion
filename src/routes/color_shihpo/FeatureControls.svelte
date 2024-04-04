@@ -2,9 +2,8 @@
 	import FeatureSelect from './FeatureSelect.svelte';
 
 	export let dataset;
-	export let rFeature;
-	export let gFeature;
-	export let bFeature;
+	export let xFeature;
+	export let yFeature;
 	export let colorFeature;
 
 	$: axisColumns = dataset.columns.filter((col) => typeof dataset[0][col] === 'number');
@@ -16,9 +15,9 @@
 </script>
 
 <div>
-	<FeatureSelect bind:value={rFeature} options={axisColumns} label={'R value'} />
-	<FeatureSelect bind:value={gFeature} options={axisColumns} label={'G value'} />
-	<FeatureSelect bind:value={bFeature} options={axisColumns} label={'B value'} />
+	<FeatureSelect bind:value={xFeature} options={axisColumns} label={'X value'} />
+	<FeatureSelect bind:value={yFeature} options={axisColumns} label={'Y value'} />
+	<!-- <FeatureSelect bind:value={bFeature} options={axisColumns} label={'B value'} /> -->
 	<FeatureSelect bind:value={colorFeature} options={colorColumns} label={'Color'} />
 </div>
 
