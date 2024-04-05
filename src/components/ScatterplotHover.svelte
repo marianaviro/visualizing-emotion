@@ -49,7 +49,6 @@
       (d) => d.y
     );
     voronoi = delaunay.voronoi([0, 0, width, height]);
-    console.log(voronoi.renderCell());
   }
 </script>
 
