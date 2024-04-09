@@ -1,13 +1,13 @@
 <script>
   import { style } from "d3";
+  import Step0 from "../slides/Step0.svelte";
   import Step2 from "../slides/Step2.svelte";
   import "./style.css";
-  // data comes from the load function in +page.js
   export let data;
 </script>
 
 <div class="container">
-  <Step2 {data} />
+  <Step0 {data} />
 </div>
 
 <style>
