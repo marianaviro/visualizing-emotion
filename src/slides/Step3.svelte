@@ -1,12 +1,13 @@
 <script>
 	import * as d3 from 'd3';
-	import Scatterplot from './step3_Scatterplot.svelte';
-	import './style.css';
-	import Details from './step3_Details.svelte';
-	import Details_selected from './step3_Details_selected.svelte';
-	import Scatterplot_Selected from './step3_Scatterplot_selected.svelte';
-	import ColorLegend from './ColorLegend.svelte';
-	import FeatureControls from './FeatureControls.svelte';
+	import Scatterplot from '../components/step3_Scatterplot.svelte';
+	import ScatterplotHover from '../components/ScatterplotHover.svelte';
+	//import './style.css';
+	import Details from '../components/step3_Details.svelte';
+	import Details_selected from '../components/step3_Details_selected.svelte';
+	import Scatterplot_Selected from '../components/step3_Scatterplot_selected.svelte';
+	import ColorLegend from '../components/ColorLegend.svelte';
+	import FeatureControls from '../components/FeatureControls.svelte';
 
 	// data comes from the load function in +page.js
 	export let data;
@@ -16,7 +17,7 @@
 	let yFeature = 'lc_tsne2_f2';
 	// let bFeature = 'lc_tsne3_f3';
 	let colorFeature = 'color';
-	let emotionFeature = 'emotion';
+	let emotionFeature = "emotion";
 	let id = 1;
 
 	let selectedImage = data.dataset[0];
@@ -110,13 +111,13 @@
 		merge_y = (clickedImage1.y + clickedImage2.y) / 2;
 	}
 
-	$: categories = d3
-		.groupSort(
-			data.dataset,
-			(g) => g.length,
-			(d) => d[colorFeature]
-		)
-		.reverse();
+	$: categories = Array.from(new Set(data.dataset.map((d) => d.color)));
+	$: emotions = Array.from(
+		data.dataset.map((d) => ({
+		emotion: d.emotion,
+		color: d.color,
+		}))
+	);
 
 	$: color = d3.scaleOrdinal().domain(categories).range(d3.schemeTableau10);
 
@@ -132,12 +133,14 @@
 <div class="container">
 	<div class="header">
 		<FeatureControls dataset={data.dataset} bind:xFeature bind:yFeature bind:colorFeature />
-		<ColorLegend {color} />
-		<button on:click={() => merge()}>
-			Merge
-		</button>
+		<div class="color">
+			<ColorLegend {emotions} {color} {selectedImage} />
+		</div>
 	</div>
 	<div class="main">
+		<button class='button' on:click={() => merge()}>
+			Merge
+		</button>
 		<Scatterplot
 			{onhover}
 			{onclick}
@@ -146,6 +149,21 @@
 			{yFeature}
 			{selectedImage}
 		/>
+		
+			<!-- <ScatterplotHover
+				{onclick}
+				{onhover}
+				dataset={data.dataset}
+				{xFeature}
+				{yFeature}
+				{colorFeature}
+				{emotionFeature}
+				{color}
+				{selectedImage}
+			/> -->
+
+		
+		
 		<Details_selected
 			{clickedImage1}
 			{clickedImage2}
@@ -196,6 +214,27 @@
 		display: flex;
 		align-items: center;
 		gap: 2em;
+	}
+
+	.button {
+		padding: 16px 32px;
+		text-align: center;
+		text-decoration: none;
+		display: inline-block;
+		font-size: 16px;
+		margin: 4px 2px;
+		transition-duration: 0.4s;
+		cursor: pointer;
+		background-color: white;
+		color: black;
+		border: 2px solid #e7e7e7;
+	}
+
+	.button:hover {background-color: #e7e7e7;}
+
+	.scatterplot {
+		border: 1px solid #ccc;
+		border-radius: 5px;
 	}
 	
 </style>

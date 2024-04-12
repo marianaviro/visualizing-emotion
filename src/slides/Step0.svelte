@@ -3,6 +3,7 @@
   import Scrolly from "../components/Scrolly.svelte";
   import PixelZoomIn from "../components/PixelZoomIn.svelte";
   import Step2 from "./Step2.svelte";
+  import Step3 from "./Step3.svelte";
 
   let value;
   const steps = [
@@ -39,6 +40,10 @@
   <div class="spacer" />
   <div class="dashboard">
     <Step2 {data} />
+  </div>
+  <div class="spacer" />
+  <div class="dashboard">
+    <Step3 {data} />
   </div>
 </div>
 

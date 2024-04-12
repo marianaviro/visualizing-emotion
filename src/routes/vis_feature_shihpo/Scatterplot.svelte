@@ -1,7 +1,8 @@
 <script>
 	import * as d3 from "d3";
 	import Axis from "./Axis.svelte";
-  
+	import npyjs from "npyjs";
+
 	export let onhover;
 	export let onclick;
 	export let dataset;

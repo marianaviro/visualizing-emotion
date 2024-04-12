@@ -1,13 +1,14 @@
 <script>
 	import * as d3 from 'd3';
-	import Scatterplot from './step3_Scatterplot.svelte';
+	// import Scatterplot from './Scatterplot.svelte';
 	import './style.css';
-	import Details from './step3_Details.svelte';
-	import Details_selected from './step3_Details_selected.svelte';
-	import Scatterplot_Selected from './step3_Scatterplot_selected.svelte';
+	// import Details from './Details.svelte';
+	// import Details_selected from './Details_selected.svelte';
+	// import Scatterplot_Selected from './Scatterplot_selected.svelte';
+	import ColorHue from './ColorHue.svelte';
 	import ColorLegend from './ColorLegend.svelte';
 	import FeatureControls from './FeatureControls.svelte';
-
+	import npyjs from "npyjs";
 	// data comes from the load function in +page.js
 	export let data;
 
@@ -17,13 +18,16 @@
 	// let bFeature = 'lc_tsne3_f3';
 	let colorFeature = 'color';
 	let emotionFeature = 'emotion';
+	let feature_maps = 'empty';
 	let id = 1;
+	let idx = 0;
 
 	let selectedImage = data.dataset[0];
-	let clickedImage1 = data.dataset[0];
-	let clickedImage2 = data.dataset[0];
+	// let clickedImage1 = data.dataset[0];
+	// let clickedImage2 = data.dataset[0];
 	let merge_x = 100.0;
 	let merge_y = 100.0;
+	
 
 	function draw_add(obj_id) {
 		const c = document.getElementById(obj_id);
@@ -53,31 +57,16 @@
 		// console.log(image);
 	}
 
-	function onclick(image){
-		if (id == 1){
-			id = 2;
-			clickedImage1 = image;
-			// console.log(clickedImage1.file_path);
-			// let img = document.getElementById("img1");
-			// img.setAttribute("border", "6px");
-			
-			document.getElementById("img1").style.border="3px solid red";
-			document.getElementById("plot1").style.border="3px solid red";
-			draw_add("add_img_fig");
-			draw_add("add_plot_fig");
-		}
-		else {
-			id = 1;
-			clickedImage2 = image;
-			// let img = document.getElementById("img2");
-			// img.setAttribute("border", "6px");
-			
-			document.getElementById("img2").style.border="3px solid red";
-			document.getElementById("plot2").style.border="3px solid red";
-			draw_eq("eq_img_fig");
-			draw_eq("eq_plot_fig");
-		}
-		console.log(id);
+	let n = new npyjs();
+	async function onclick(){
+		selectedImage = data.dataset[idx];
+		// console.log(selectedImage.lc_feat_path);
+		feature_maps = await n.load("http://localhost:5173/"+selectedImage.lc_feat_path);
+		var feat_array = feature_maps['data'];
+		console.log(feat_array);
+		// console.log(selectedImage);
+		// console.log(feature_maps['data']);
+		idx += 1;
 	}
 
 	function loadImage(src, onload) {
@@ -120,53 +109,23 @@
 
 	$: color = d3.scaleOrdinal().domain(categories).range(d3.schemeTableau10);
 
-	// let n = new npyjs();
-	// n.load("CS229/m20_dfs_a_la_feat.npy", (array, shape) => {
-	// 	console.log('test');
-	// 	console.log(array);
-	// 	console.log(array['data']);
-	// 	console.log(array['shape']);
-	// });
 </script>
 
 <div class="container">
 	<div class="header">
 		<FeatureControls dataset={data.dataset} bind:xFeature bind:yFeature bind:colorFeature />
 		<ColorLegend {color} />
-		<button on:click={() => merge()}>
-			Merge
+		<button on:click={() => onclick()}>
+			Select
 		</button>
 	</div>
 	<div class="main">
-		<Scatterplot
-			{onhover}
-			{onclick}
-			dataset={data.dataset}
-			{xFeature}
-			{yFeature}
+		<ColorHue
 			{selectedImage}
-		/>
-		<Details_selected
-			{clickedImage1}
-			{clickedImage2}
-			{selectedImage}
+			{feature_maps}
 		/>
 	</div>
 	
-	<div class="main">
-		<Details
-			{selectedImage}
-		/>
-		<Scatterplot_Selected
-			dataset={data.dataset}
-			{xFeature}
-			{yFeature}
-			{clickedImage1}
-			{clickedImage2}
-			{merge_x}
-			{merge_y}
-		/>
-	</div>
 	
 </div>
 

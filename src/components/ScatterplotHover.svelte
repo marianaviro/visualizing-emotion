@@ -17,9 +17,9 @@
 
   let voronoi;
 
-  $: width = borderBoxSize ? borderBoxSize[0].inlineSize : 400;
+  $: width = borderBoxSize ? borderBoxSize[0].inlineSize : 300;
 
-  $: height = borderBoxSize ? borderBoxSize[0].blockSize : 400;
+  $: height = borderBoxSize ? borderBoxSize[0].blockSize : 300;
 
   $: x = d3
     .scaleLinear()
