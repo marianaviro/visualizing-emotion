@@ -1,23 +1,42 @@
 <script>
+  // import FeatureControls from "../components/FeatureControls.svelte";
+  // import Voronoi from "../components/Voronoi.svelte";
   import * as d3 from "d3";
-  import Voronoi from "../components/Voronoi.svelte";
-  import ScatterplotHover from "../components/ScatterplotHover.svelte";
+  import ScatterplotImages from "../components/ScatterplotImages.svelte";
   import Details from "../components/Details.svelte";
   import ColorLegend from "../components/ColorLegend.svelte";
-  import FeatureControls from "../components/FeatureControls.svelte";
 
-  // data comes from the load function in +page.js
+  import FeatureFilter from "../components/FeatureFilter.svelte";
+
   export let data;
 
-  // default features to visualize
-  let xFeature = "lc_tsne2_f1";
-  let yFeature = "lc_tsne2_f2";
-  let colorFeature = "color";
-  let emotionFeature = "emotion";
+  let selected = "Final layer";
+
+  $: xFeature =
+    selected == "Final layer"
+      ? "lc_tsne2_f1"
+      : selected == "Second layer"
+        ? "lb_tsne2_f1"
+        : "la_tsne2_f1";
+  $: yFeature =
+    selected == "Final layer"
+      ? "lc_tsne2_f2"
+      : selected == "Second layer"
+        ? "lb_tsne2_f2"
+        : "la_tsne2_f2";
 
   let selectedImage = data.dataset[0];
+  let isIntact = true;
+  let showAll = true;
+
   function onhover(image) {
     selectedImage = image;
+    isIntact = false;
+    showAll = false;
+  }
+
+  function reset() {
+    showAll = true;
   }
 
   $: categories = Array.from(new Set(data.dataset.map((d) => d.color)));
@@ -29,32 +48,22 @@
   );
 
   $: color = d3.scaleOrdinal().domain(categories).range(d3.schemeTableau10);
-
-  function onclick() {
-    console.log("Click!");
-  }
 </script>
 
 <div class="main">
   <div class="controls">
-    <FeatureControls
-      dataset={data.dataset}
-      bind:xFeature
-      bind:yFeature
-      bind:colorFeature
-    />
+    <FeatureFilter bind:selected />
   </div>
   <div class="scatterplot">
-    <ScatterplotHover
-      {onclick}
+    <ScatterplotImages
       {onhover}
       dataset={data.dataset}
       {xFeature}
       {yFeature}
-      {colorFeature}
-      {emotionFeature}
-      {color}
       {selectedImage}
+      {isIntact}
+      {showAll}
+      {reset}
     />
   </div>
   <div class="color">
@@ -67,16 +76,16 @@
 
 <style>
   .main {
-    max-width: 50%;
+    /* max-width: 50%; */
     height: 100%;
     display: flex;
     flex-direction: column;
-    gap: 2em;
+    gap: 1em;
     flex: 1;
   }
 
   .details {
-    flex: 1;
+    flex: 0.5;
     height: 100%;
   }
 
@@ -87,7 +96,7 @@
   }
 
   .scatterplot {
-    flex: 0.3;
+    flex: 1;
     border: 1px solid #ccc;
     border-radius: 5px;
   }

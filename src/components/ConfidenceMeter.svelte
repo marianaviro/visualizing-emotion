@@ -11,7 +11,7 @@
 
   $: height = borderBoxSize
     ? Math.min(borderBoxSize[0].blockSize, borderBoxSize[0].inlineSize)
-    : 555;
+    : 350;
 </script>
 
 <div class="meter-container">

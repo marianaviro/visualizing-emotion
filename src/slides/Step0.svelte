@@ -1,4 +1,7 @@
 <script>
+  /**
+      Component based on Svelte Scrollytelling Starter by Connor Rothschild https://twitter.com/CL_Rothschild
+  */
   export let data;
   import Scrolly from "../components/Scrolly.svelte";
   import PixelZoomIn from "../components/PixelZoomIn.svelte";
@@ -7,10 +10,10 @@
 
   let value;
   const steps = [
-    "<p>This is a dynamic, responsive scatterplot that uses Russell Goldenberg's <a href='	https://twitter.com/codenberg/status/1432774653139984387' target='_blank'><code>Scrolly</code></a> to update its points' values on scroll.</p>",
-    "<p>The scatterplot uses tweened values to automatically update your points with smooth transitions. It also binds to the width of the container <code>div</code>, so its responsive by default.</p>",
-    "<p>Try resizing me to see the 'side-by-side' version, compared to the 'text-on-top' version that appears on small screens.</p><p>Want it to always appear 'text-on-top'? Just comment out the media query at the bottom of our styles (as in, leave the styles but comment out the surrounding <code>media</code> query).</p>",
-    "<p>The scatterplot uses tweened values to automatically update your points with smooth transitions. It also binds to the width of the container <code>div</code>, so its responsive by default.</p>",
+    "<p>Have you ever wondered how machines understand images and detect features in them? How can a machine detect the emotion that is being shown in an image?</p>",
+    "<p>Although we don't see them, an image is composed of thousands of pixels arranged in a grid.</p>",
+    "<p>It is essentially a matrix.</p>",
+    "<p>In each cell, the matrix stores 3 values, which correspond to the values of colors that digital displays use: red, green, and blue.</p>",
   ];
 </script>
 
@@ -41,7 +44,7 @@
   <div class="dashboard">
     <Step2 {data} />
   </div>
-  <div class="spacer" />
+  <div class="short-spacer" />
   <div class="dashboard">
     <Step3 {data} />
   </div>
@@ -79,6 +82,7 @@
     height: 80vh;
     width: 100vw;
     display: flex;
+    justify-content: space-around;
     flex-direction: row;
     gap: 4em;
   }
@@ -109,6 +113,10 @@
 
   .spacer {
     height: 60vh;
+  }
+
+  .short-spacer {
+    height: 30vh;
   }
 
   .sticky {

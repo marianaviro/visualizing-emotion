@@ -4,16 +4,10 @@
   export let dataset;
   export let xFeature;
   export let yFeature;
-  export let colorFeature;
 
   $: axisColumns = dataset.columns.filter(
     (col) => typeof dataset[0][col] === "number"
   );
-
-  $: colorColumns = dataset.columns.filter((col) => {
-    const numUnique = new Set(dataset.map((d) => d[col])).size;
-    return numUnique <= 10;
-  });
 </script>
 
 <div>
@@ -27,11 +21,6 @@
     options={axisColumns}
     label={"feature Y:"}
   />
-  <!-- <FeatureSelect
-    bind:value={colorFeature}
-    options={colorColumns}
-    label={"Color"}
-  /> -->
 </div>
 
 <style>

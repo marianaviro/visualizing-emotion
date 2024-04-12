@@ -3,7 +3,7 @@
   import ConfidenceMeter from "./ConfidenceMeter.svelte";
   export let selectedImage;
 
-  $: confidenceScale = d3.scaleLinear().domain([0, 1]).range([555, 0]);
+  $: confidenceScale = d3.scaleLinear().domain([0, 1]).range([350, 0]);
 </script>
 
 <div class="details-container">
@@ -48,6 +48,7 @@
     gap: 2em;
     display: flex;
     flex-direction: column;
+    padding-right: 40px;
   }
 
   .top {
@@ -85,14 +86,14 @@
   }
 
   img {
-    max-height: 90%;
+    max-height: 50%;
     /* Not working */
     transition: all 500ms;
   }
 
   .value {
     line-height: 0.9;
-    font-size: 2.5em;
+    font-size: 2em;
     font-family: "mono45-headline", monospace;
     font-weight: 700;
     font-style: normal;
