@@ -24,13 +24,18 @@
 	let lc_colorhue = new Array(8);
 	let lb_colorhue = new Array(8);
 	let la_colorhue = new Array(8);
+	let selected_colorhue = new Array(8);
+	let color_idx = 0;
 	for (let i = 0; i < 8; i ++){
 		lc_colorhue[i] = new Array(4);
 		lb_colorhue[i] = new Array(4);
 		la_colorhue[i] = new Array(4);
+		selected_colorhue[i] = new Array(4);
 	}
+	
 	let id = 1;
 	let idx = 0;
+	let clicked = false;
 
 	let selectedImage = data.dataset[0];
 	// let clickedImage1 = data.dataset[0];
@@ -69,6 +74,7 @@
 
 	let n = new npyjs();
 	async function onclick(){
+		clicked = true;
 		selectedImage = data.dataset[idx];
 		// console.log(selectedImage.lc_feat_path);
 		var lc_feature_maps = await n.load("http://localhost:5173/"+selectedImage.lc_feat_path);
@@ -83,9 +89,9 @@
 		
 		for (let i = 0; i < 8; i ++){
 			for (let j = 0; j < 4; j++){
-				lc_colorhue[i][j] = 0;
-				lb_colorhue[i][j] = 0;
-				la_colorhue[i][j] = 0;
+				lc_colorhue[i][j] = 0.0;
+				lb_colorhue[i][j] = 0.0;
+				la_colorhue[i][j] = 0.0;
 			}
 		}
 		
@@ -101,49 +107,54 @@
 		lb_feat_array = d3.map(lb_feat_array, d => (d - lb_min) / (lb_max - lb_min));
 		la_feat_array = d3.map(la_feat_array, d => (d - la_min) / (la_max - la_min));
 		
-		console.log('frst', lc_colorhue);
+		// var lc_sum = d3.sum(lc_feat_array, d => d);
+		// console.log('ff', lc_sum);
+		// console.log('frst', lc_colorhue);
 		
 		for (let i = 0; i < 8; i++){
-			for (let j = 0; j < lc_feat_array.length / 32; j++){
+			let lc_size = lc_feat_array.length / 32;
+			let lb_size = lb_feat_array.length / 32;
+			let la_size = la_feat_array.length / 32;
+			for (let j = 0; j < lc_size; j++){
 				lc_colorhue[i][0] += lc_feat_array[j + i * (lc_feat_array.length / 8)];
 			}
-			for (let j = 0; j < lb_feat_array.length / 32; j++){
+			for (let j = 0; j < lb_size; j++){
 				lb_colorhue[i][0] += lb_feat_array[j + i * (lb_feat_array.length / 8)];
 			}
-			for (let j = 0; j < la_feat_array.length / 32; j++){
+			for (let j = 0; j < la_size; j++){
 				la_colorhue[i][0] += la_feat_array[j + i * (la_feat_array.length / 8)];
 			}
 			
 			
-			for (let j = lc_feat_array.length / 32; j < lc_feat_array.length / 24; j++){
+			for (let j = lc_size; j < lc_size * 2; j++){
 				lc_colorhue[i][1] += lc_feat_array[j + i * (lc_feat_array.length / 8)];
 			}
-			for (let j = lb_feat_array.length / 32; j < lb_feat_array.length / 24; j++){
+			for (let j = lb_size; j < lb_size * 2; j++){
 				lb_colorhue[i][1] += lb_feat_array[j + i * (lb_feat_array.length / 8)];
 			}
-			for (let j = la_feat_array.length / 32; j < la_feat_array.length / 24; j++){
+			for (let j = la_size; j < la_size * 2; j++){
 				la_colorhue[i][1] += la_feat_array[j + i * (la_feat_array.length / 8)];
 			}
 			
-			// something wrong, don't know
-			for (let j = lc_feat_array.length / 24; j < lc_feat_array.length / 16; j++){
+
+			for (let j = lc_size * 2; j < lc_size * 3; j++){
 				lc_colorhue[i][2] += lc_feat_array[j + i * (lc_feat_array.length / 8)];
 			}
-			for (let j = lb_feat_array.length / 24; j < lb_feat_array.length / 16; j++){
+			for (let j = lb_size * 2; j < lb_size * 3; j++){
 				lb_colorhue[i][2] += lb_feat_array[j + i * (lb_feat_array.length / 8)];
 			}
-			for (let j = la_feat_array.length / 24; j < la_feat_array.length / 16; j++){
+			for (let j = la_size * 2; j < la_size * 3; j++){
 				la_colorhue[i][2] += la_feat_array[j + i * (la_feat_array.length / 8)];
 			}
 		
 
-			for (let j = lc_feat_array.length / 16; j < lc_feat_array.length / 8; j++){
+			for (let j = lc_size * 3; j < lc_size * 4; j++){
 				lc_colorhue[i][3] += lc_feat_array[j + i * (lc_feat_array.length / 8)];
 			}
-			for (let j = lb_feat_array.length / 16; j < lb_feat_array.length / 8; j++){
+			for (let j = lb_size * 3; j < lb_size * 4; j++){
 				lb_colorhue[i][3] += lb_feat_array[j + i * (lb_feat_array.length / 8)];
 			}
-			for (let j = la_feat_array.length / 16; j < la_feat_array.length / 8; j++){
+			for (let j = la_size * 3; j < la_size * 4; j++){
 				la_colorhue[i][3] += la_feat_array[j + i * (la_feat_array.length / 8)];
 			}
 		}
@@ -153,14 +164,16 @@
 				lc_colorhue[i][j] /= (lc_feat_array.length / 32);
 				lb_colorhue[i][j] /= (lb_feat_array.length / 32);
 				la_colorhue[i][j] /= (la_feat_array.length / 32);
+				selected_colorhue[i][j] = lc_colorhue[i][j];
 			}
 		}
 
 		// console.log(lc_colorhue);
-		console.log(lb_colorhue);
+		// console.log(lb_colorhue);
 		
 		// console.log(selectedImage);
 		// console.log(feature_maps['data']);
+		
 		idx += 1;
 	}
 
@@ -174,24 +187,22 @@
 
 		return img;
 	}
-	function merge(){
-		var canvas = document.getElementById("myCanvas");
-		var ctx = canvas.getContext("2d");
-		var img1 = loadImage(clickedImage1.file_path);
-		var img2 = loadImage(clickedImage2.file_path);
-		ctx.drawImage(img1, 0, 0, 250, 310);
-        ctx.globalAlpha = 0.5;
-        ctx.drawImage(img2, 0, 0, 250, 310);
-		// let img = document.getElementById("img1");
-		// img.setAttribute("border", "");
-		// img = document.getElementById("img2");
-		// img.setAttribute("border", "");
-		document.getElementById("img1").style.border="";
-		document.getElementById("img2").style.border="";
-		document.getElementById("plot1").style.border="3px solid black";
-		document.getElementById("plot2").style.border="3px solid black";
-		merge_x = (clickedImage1.x + clickedImage2.x) / 2;
-		merge_y = (clickedImage1.y + clickedImage2.y) / 2;
+	function next_layer(){
+		color_idx += 1;
+		clicked = true;
+		for (let i = 0; i < 8; i ++){
+			for (let j = 0; j < 4; j++){
+				if (color_idx % 3 == 0){
+					selected_colorhue[i][j] = lc_colorhue[i][j];
+				}
+				else if (color_idx % 3 == 1){
+					selected_colorhue[i][j] = lb_colorhue[i][j];
+				}
+				else if (color_idx % 3 == 2){
+					selected_colorhue[i][j] = la_colorhue[i][j];
+				}
+			}
+		}
 	}
 
 	$: categories = d3
@@ -211,12 +222,19 @@
 		<button on:click={() => onclick()}>
 			Select
 		</button>
+		<button on:click={() => next_layer()}>
+			Next layer
+		</button>
 	</div>
 	<div class="main">
-		<ColorHue
+		<!-- <ColorHue
 			bind:lc_colorhue={lc_colorhue}
 			bind:lb_colorhue={lb_colorhue}
 			bind:la_colorhue={la_colorhue}
+		/> -->
+		<ColorHue
+			bind:selected_colorhue={selected_colorhue}
+			bind:clicked={clicked}
 		/>
 		<Details
 			{selectedImage}
