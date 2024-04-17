@@ -118,6 +118,7 @@
           fill="none"
           stroke-width="5"
           stroke={d.color}
+          stroke-linejoin="round"
         />
         <image
           class={(selectedImage &&
@@ -147,7 +148,7 @@
           fill="none"
           stroke-width="5"
           stroke={selectedImage.color}
-          stroke-linecap="round"
+          stroke-linejoin="round"
         />
         <image
           class={"pic " + selectedImage.color}
