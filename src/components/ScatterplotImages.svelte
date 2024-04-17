@@ -104,12 +104,27 @@
           on:mouseover={() => onhover(d)}
           on:focus={() => onhover(d)}
         />
+        <rect
+          class={(selectedImage &&
+            !isIntact &&
+            selectedImage.emotion == d.emotion) ||
+          showAll
+            ? ""
+            : "disabled"}
+          x={d.x - 8}
+          y={d.y - 10}
+          width="16"
+          height="20"
+          fill="none"
+          stroke-width="5"
+          stroke={d.color}
+        />
         <image
           class={(selectedImage &&
             !isIntact &&
             selectedImage.emotion == d.emotion) ||
           showAll
-            ? "pic"
+            ? "pic " + d.color
             : "pic-disabled"}
           xlink:href={d.file_path}
           x={d.x - 10}
@@ -124,8 +139,18 @@
         />
       {/each}
       {#if selectedImage && !isIntact}
+        <rect
+          x={selectedImage.x - 26}
+          y={selectedImage.y - 32}
+          width="52"
+          height="63"
+          fill="none"
+          stroke-width="5"
+          stroke={selectedImage.color}
+          stroke-linecap="round"
+        />
         <image
-          class="pic"
+          class={"pic " + selectedImage.color}
           xlink:href={selectedImage.file_path}
           x={selectedImage.x - 30}
           y={selectedImage.y - 30}
@@ -147,11 +172,19 @@
     height: 100%;
   }
   .cell,
-  .pic {
+  .pic,
+  rect {
     cursor: pointer;
+    transition:
+      x 250ms,
+      y 250ms;
   }
 
   .pic-disabled {
     opacity: 20%;
+  }
+
+  .disabled {
+    display: none;
   }
 </style>
