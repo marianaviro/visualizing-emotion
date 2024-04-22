@@ -5,6 +5,7 @@
   export let data;
   import Scrolly from "../components/Scrolly.svelte";
   import PixelZoomIn from "../components/PixelZoomIn.svelte";
+  import Step1 from "./Step1.svelte";
   import Step2 from "./Step2.svelte";
   import Step3 from "./Step3.svelte";
 
@@ -39,6 +40,10 @@
     <div class="sticky">
       <PixelZoomIn step={value} {data} />
     </div>
+  </div>
+  <div class="spacer" />
+  <div class="dashboard">
+    <Step1 {data} />
   </div>
   <div class="spacer" />
   <div class="dashboard">

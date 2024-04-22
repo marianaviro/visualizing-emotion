@@ -1,13 +1,7 @@
 <script>
 	import * as d3 from 'd3';
-	// import Scatterplot from './Scatterplot.svelte';
-	import './style.css';
-	import Details from './Details.svelte';
-	// import Details_selected from './Details_selected.svelte';
-	// import Scatterplot_Selected from './Scatterplot_selected.svelte';
-	import ColorHue from './ColorHue.svelte';
-	import ColorLegend from './ColorLegend.svelte';
-	import FeatureControls from './FeatureControls.svelte';
+	import Details from '../components/step1_Details.svelte';
+	import ColorHue from '../components/step1_ColorHue.svelte';
 	import npyjs from "npyjs";
 	// data comes from the load function in +page.js
 	export let data;

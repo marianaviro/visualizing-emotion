@@ -1,5 +1,5 @@
 import * as d3 from 'd3';
-
+import npyjs from "npyjs";
 
 export async function load({ fetch }) {
 	// load the csv file as a string
@@ -24,7 +24,7 @@ export async function load({ fetch }) {
 	// console.log(feature_maps);
 	// console.log(feature_maps['data']);
 
-	return { dataset };
+	return { dataset};
 
 	
 }
