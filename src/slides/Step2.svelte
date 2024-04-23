@@ -10,18 +10,18 @@
 
   export let data;
 
-  let selected = "Final layer";
+  let selected = 2;
 
   $: xFeature =
-    selected == "Final layer"
+    selected == 2
       ? "lc_tsne2_f1"
-      : selected == "Second layer"
+      : selected == 1
         ? "lb_tsne2_f1"
         : "la_tsne2_f1";
   $: yFeature =
-    selected == "Final layer"
+    selected == 2
       ? "lc_tsne2_f2"
-      : selected == "Second layer"
+      : selected == 1
         ? "lb_tsne2_f2"
         : "la_tsne2_f2";
 

@@ -6,9 +6,9 @@
 
 <h4>Feature layer:</h4>
 <div class="label-and-select">
-  {#each opts as opt}
+  {#each opts as opt, i}
     <label>
-      <input type="radio" name="layers" value={opt} bind:group={selected} />
+      <input type="radio" name="layers" value={i} bind:group={selected} />
       {opt}
     </label>
   {/each}

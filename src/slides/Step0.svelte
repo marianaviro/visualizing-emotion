@@ -15,14 +15,17 @@
     "<p>Although we don't see them, an image is composed of thousands of pixels arranged in a grid.</p>",
     "<p>It is essentially a matrix.</p>",
     "<p>In each cell, the matrix stores 3 values, which correspond to the values of colors that digital displays use: red, green, and blue.</p>",
+    "<p>As each cell stores 3 values, we could think of images as having 3 <i>layers</i>, one for red values, one for green, and one for blue.<br><br> This means that for each image we have <i><b>3 * {image width} * {image height}</b></i> different values.<br><br>For a 600 px * 800 px image, we would have 3 * 600 * 800 = <b>1,440,000 values!</b></p>",
+    "<p>But to extract an emotion from an image, we only need one value: its <b>emotion</b>. Or maybe two: the <b>confidence</b> with which we can say 'Yeah, that image is showing this emotion'.<br><br>So, <b>how do we summarize 1,440,000 values into only one or two?</b>",
   ];
 </script>
 
 <div class="wrapper">
   <div class="hero">
     <h1>
-      A <span><div class="gradient-text">chromatic analysis</div></span> of how machines
-      identify emotions
+      Visualizing machine understanding of <span
+        ><div class="gradient-text">human emotion</div></span
+      >
     </h1>
     <h4>By Mariana Villamizar & Shih-Po Lee</h4>
   </div>
@@ -41,21 +44,96 @@
       <PixelZoomIn step={value} {data} />
     </div>
   </div>
-  <div class="spacer" />
-  <div class="dashboard">
+  <div class="x-short-spacer" />
+  <div class="explanation">
+    <p>
+      To do this, we can use <b
+        ><a href="https://en.wikipedia.org/wiki/Neural_network"
+          >artificial neural networks</a
+        ></b
+      >, which are mathematical models used in machine-learning to train
+      machines. In this case, we will use them to train a machine in the
+      identification of emotions.
+    </p>
+    <p>
+      But still, the results of a neural network are matrices full of floating
+      numbers that won't mean anything to humans like us. How can we visualize
+      these numbers?
+    </p>
+    <p>
+      What if we take each one of the layers (or matrices) and compute the
+      average of all the numbers inside them? We would get an array of values,
+      right? We could then compute the average of each pair of values in that
+      array until we end up with 8 colors, each comprised of 4 values (red,
+      green, blue, and an opacity value). These are some of the results:
+    </p>
+  </div>
+  <div class="x-short-spacer" />
+  <div class="dashboard features">
     <Step1 {data} />
   </div>
-  <div class="spacer" />
+  <div class="x-short-spacer" />
+  <div class="explanation">
+    <p>
+      With these visualizations it is still hard to see the similarities and
+      differences between the images. What if we tried another way of <b
+        >lowering the dimensionality</b
+      > of our initial layers?
+    </p>
+    <p>
+      We can use an algorithm called <b
+        ><a
+          href="https://en.wikipedia.org/wiki/T-distributed_stochastic_neighbor_embedding"
+          >t-SNE</a
+        ></b
+      >, which takes one highly-dimensional data point (in our case, an image)
+      and projects it into a lower dimensional plane, like an X-Y plot. This
+      scatterplot shows more clearly
+      <b
+        >how different or similar the images are to the machine in terms of
+        their emotion.</b
+      >
+    </p>
+  </div>
+  <div class="x-short-spacer" />
   <div class="dashboard">
     <Step2 {data} />
   </div>
-  <div class="short-spacer" />
-  <div class="dashboard">
+  <div class="x-short-spacer" />
+  <div class="explanation">
+    <p>
+      So now we have the features of every image as x and y coordinates in a
+      two-dimensional plane. What will happen if we add the images and features
+      of two different emotions together?
+    </p>
+  </div>
+  <div class="x-short-spacer" />
+  <div class="dashboard features">
     <Step3 {data} />
   </div>
+  <div class="x-short-spacer" />
+  <div class="explanation">
+    <p>
+      It is hard to observe the emotion from the mixed face. However, we can see
+      that in the feature space, happy feature + sad feature = disgust feature
+      instead of neutral feature!
+    </p>
+  </div>
+  <div class="short-spacer" />
 </div>
 
 <style>
+  .explanation {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 3em;
+    align-items: center;
+  }
+  .explanation p {
+    max-width: 600px;
+  }
+
   :global(body) {
     overflow-x: hidden;
   }
@@ -80,6 +158,10 @@
 
   .wrapper {
     width: 100%;
+  }
+
+  .dashboard.features {
+    height: auto;
   }
 
   .dashboard {
@@ -122,6 +204,10 @@
 
   .short-spacer {
     height: 30vh;
+  }
+
+  .x-short-spacer {
+    height: 15vh;
   }
 
   .sticky {
