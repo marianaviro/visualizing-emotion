@@ -12,8 +12,8 @@ and D3.js.
 ## How to run
 
 Download the folder CS229 from
-[this link](https://drive.google.com/file/d/1WUsfEj4VAAu2ruH32vX_lDZmhFwX5_iV/view?usp=sharing)
-and place it in the `static` folder of this project. Then run:
+[this link](https://drive.google.com/file/d/1WUsfEj4VAAu2ruH32vX_lDZmhFwX5_iV/view?usp=sharing),
+unzip it and place it in the `static` folder of this project. Then run:
 
 ```
 npm install
